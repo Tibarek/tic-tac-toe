@@ -1,0 +1,12 @@
+.container{
+    text-align: center;
+}
+
+.board {
+  box-sizing: border-box;
+  width: 90px;
+  margin: auto;
+}
+
+.cell {
+}
