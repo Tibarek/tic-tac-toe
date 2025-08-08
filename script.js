@@ -18,6 +18,16 @@ const Gameboard = () => {
     }
   };
 
+  const clearBoard = () => {
+    for(let i = 0; i < 3; i++){
+      for(let j = 0; j < 3; j++){
+        if(board[i][j] !== ""){
+          board[i][j] = "";
+        }
+      }
+    }
+  };
+
   const getBoard = () => board;
 
   const checkWin = (mark) => {
@@ -55,7 +65,7 @@ const Gameboard = () => {
     return false;
   };
 
-  return {getBoard, printBoard, placeMark, checkWin, checkTie};
+  return {getBoard, printBoard, placeMark, checkWin, checkTie, clearBoard};
 };
 
 const Player = (name, mark) => {
@@ -100,37 +110,107 @@ const Game = () => {
     switchPlayer();
   };
 
-  return { player1, player2, getCurrentPlayer, playTurn, getBoard: gameboard.getBoard};
+  const restartGame = () => {
+    gameboard.clearBoard();
+    console.log(gameboard.getBoard());
+  }
+
+  return { player1, player2, getCurrentPlayer, playTurn, restartGame, getBoard: gameboard.getBoard};
 };
 
-const ScreenDisplay = () => {
-  const boardDiv = document.querySelector(".board");
+// const ScreenDisplay = () => {
+//   const boardDiv = document.querySelector(".board");
+//   const playerTurnDiv = document.querySelector(".playerTurn");
+//   const startBtn = document.querySelector(".start-btn");
+//   const restartBtn = document.querySelector(".restart-btn");
+//   const playerForm = document.querySelector(".player-form");
+//   const game = Game();
+
+//   const updateScreen = () => {
+//     boardDiv.textContent = "";
+//     const board = game.getBoard();
+//     const currentPlayer = game.getCurrentPlayer();
+//     playerTurnDiv.textContent = `${currentPlayer.name}'s turn`;
+//     let i = 0;
+//     board.forEach(row => {
+//       row.forEach((cell, index) => {
+//         const cellButton = document.createElement("button");
+//         cellButton.classList.add("cell");
+//         cellButton.dataset.row = i;
+//         cellButton.dataset.column = index;
+//         cellButton.textContent = cell;
+//         boardDiv.appendChild(cellButton);
+//       })
+//       i++;
+//     });
+//   }
+//   function clickHandlerBoard(e) {
+//     const selectedCol = e.target.dataset.column;
+//     const selectedRow = e.target.dataset.row;
+//     game.playTurn(selectedRow,selectedCol);
+//     updateScreen();
+//     }
+//   boardDiv.addEventListener("click", clickHandlerBoard);
+
+//   restartBtn.addEventListener("click", () => {
+//     game.restartGame();
+//     updateScreen();
+//   });
+
+//   startBtn.addEventListener("click", () => {
+//     playerForm.textContent = "";
+//     WelcomePage();
+//   });
+// };
+
+
+ const WelcomePage = () => {
+   const boardDiv = document.querySelector(".board");
   const playerTurnDiv = document.querySelector(".playerTurn");
-  const player1Input = document.querySelector("#player1");
-  const player2Input = document.querySelector("#player2");
-  const submitBtn = document.querySelector(".submit-btn");
+  const startBtn = document.querySelector(".start-btn");
+  const restartBtn = document.querySelector(".restart-btn");
+  // const playerForm = document.querySelector(".player-form");
+  // const game = Game();
+  const game = Game();
   const player1Para = document.querySelector(".player1-p");
   const player2Para = document.querySelector(".player2-p");
-  const game = Game();
+  const playerForm = document.querySelector(".player-form");
+  const p1 = document.createElement("input");
+  const p2 = document.createElement("input");
+  const playBtn = document.createElement("button");
+  playBtn.classList.add("submit-btn");
+  playBtn.textContent = "Play";
+  p1.classList.add("p1");
+  p2.classList.add("p2")
+  playerForm.appendChild(p1);
+  playerForm.appendChild(p2);
+  playerForm.appendChild(playBtn);
+
 
   function updatePlayer(e) {
     e.preventDefault();
-    if(player1Input.value === ""){
+    if(p1.value === ""){
       game.player1.name = "Player1";
-    }else if(player1Input.value !== ""){
-      game.player1.name = player1Input.value;
+    }else if(p1.value !== ""){
+      game.player1.name = p1.value;
     }
     player1Para.textContent = `${game.player1.name}-O`;
 
-    if(player2Input.value === ""){
+    if(p2.value === ""){
       game.player2.name = "Player2";
-    }else if(player2Input.value !== ""){
-      game.player2.name = player2Input.value;
+    }else if(p2.value !== ""){
+      console.log(p2.value);
+      game.player2.name = p2.value;
+      console.log(game.player2.name);
     }
     player2Para.textContent = `${game.player2.name}-X`;
+    playerForm.textContent = "";
     updateScreen();
+
   }
-  
+  playBtn.addEventListener("click", updatePlayer);
+
+
   const updateScreen = () => {
     boardDiv.textContent = "";
     const board = game.getBoard();
@@ -155,9 +235,19 @@ const ScreenDisplay = () => {
     game.playTurn(selectedRow,selectedCol);
     updateScreen();
     }
-
-  submitBtn.addEventListener("click", updatePlayer);
   boardDiv.addEventListener("click", clickHandlerBoard);
-};
 
-ScreenDisplay();
+  restartBtn.addEventListener("click", () => {
+    game.restartGame();
+    updateScreen();
+  });
+
+  startBtn.addEventListener("click", () => {
+    playerForm.textContent = "";
+    WelcomePage();
+  });
+}
+
+
+
+WelcomePage();
