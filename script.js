@@ -118,73 +118,37 @@ const Game = () => {
   return { player1, player2, getCurrentPlayer, playTurn, restartGame, getBoard: gameboard.getBoard};
 };
 
-// const ScreenDisplay = () => {
-//   const boardDiv = document.querySelector(".board");
-//   const playerTurnDiv = document.querySelector(".playerTurn");
-//   const startBtn = document.querySelector(".start-btn");
-//   const restartBtn = document.querySelector(".restart-btn");
-//   const playerForm = document.querySelector(".player-form");
-//   const game = Game();
-
-//   const updateScreen = () => {
-//     boardDiv.textContent = "";
-//     const board = game.getBoard();
-//     const currentPlayer = game.getCurrentPlayer();
-//     playerTurnDiv.textContent = `${currentPlayer.name}'s turn`;
-//     let i = 0;
-//     board.forEach(row => {
-//       row.forEach((cell, index) => {
-//         const cellButton = document.createElement("button");
-//         cellButton.classList.add("cell");
-//         cellButton.dataset.row = i;
-//         cellButton.dataset.column = index;
-//         cellButton.textContent = cell;
-//         boardDiv.appendChild(cellButton);
-//       })
-//       i++;
-//     });
-//   }
-//   function clickHandlerBoard(e) {
-//     const selectedCol = e.target.dataset.column;
-//     const selectedRow = e.target.dataset.row;
-//     game.playTurn(selectedRow,selectedCol);
-//     updateScreen();
-//     }
-//   boardDiv.addEventListener("click", clickHandlerBoard);
-
-//   restartBtn.addEventListener("click", () => {
-//     game.restartGame();
-//     updateScreen();
-//   });
-
-//   startBtn.addEventListener("click", () => {
-//     playerForm.textContent = "";
-//     WelcomePage();
-//   });
-// };
-
-
  const WelcomePage = () => {
-   const boardDiv = document.querySelector(".board");
+  const boardDiv = document.querySelector(".board");
   const playerTurnDiv = document.querySelector(".playerTurn");
-  const startBtn = document.querySelector(".start-btn");
-  const restartBtn = document.querySelector(".restart-btn");
-  // const playerForm = document.querySelector(".player-form");
-  // const game = Game();
+  const gameBtnDiv = document.querySelector(".game-btns");
   const game = Game();
+  const playerDiv = document.querySelector(".player-name");
   const player1Para = document.querySelector(".player1-p");
   const player2Para = document.querySelector(".player2-p");
-  const playerForm = document.querySelector(".player-form");
+  const playerForm = document.createElement("form");
+  playerForm.classList.add("player-form");
+  const p1Div = document.createElement("div");
+  const p2Div = document.createElement("div");
+  const p1Label = document.createElement("label")
+  p1Label.textContent = "Enter Player One's Name";
   const p1 = document.createElement("input");
+  const p2Label = document.createElement("label")
+  p2Label.textContent = "Enter Player Two's Name";
   const p2 = document.createElement("input");
   const playBtn = document.createElement("button");
   playBtn.classList.add("submit-btn");
   playBtn.textContent = "Play";
   p1.classList.add("p1");
   p2.classList.add("p2")
-  playerForm.appendChild(p1);
-  playerForm.appendChild(p2);
+  p1Div.appendChild(p1Label);
+  p1Div.appendChild(p1);
+  p2Div.appendChild(p2Label);
+  p2Div.appendChild(p2);
+  playerForm.appendChild(p1Div);
+  playerForm.appendChild(p2Div);
   playerForm.appendChild(playBtn);
+  playerDiv.appendChild(playerForm);
 
 
   function updatePlayer(e) {
@@ -204,7 +168,28 @@ const Game = () => {
       console.log(game.player2.name);
     }
     player2Para.textContent = `${game.player2.name}-X`;
-    playerForm.textContent = "";
+    playerDiv.textContent = "";
+    const startBtn = document.createElement("button");
+    const restartBtn = document.createElement("button");
+    startBtn.textContent = "New Game";
+    restartBtn.textContent = "Play Again"
+    gameBtnDiv.appendChild(startBtn);
+    gameBtnDiv.appendChild(restartBtn);
+
+  restartBtn.addEventListener("click", () => {
+    game.restartGame();
+    updateScreen();
+  });
+
+  startBtn.addEventListener("click", () => {
+    gameBtnDiv.textContent = "";
+    playerDiv.textContent = "";
+    boardDiv.textContent = "";
+    player1Para.textContent = "";
+    player2Para.textContent = "";
+    playerTurnDiv.textContent = "";
+    WelcomePage();
+  });
     updateScreen();
 
   }
@@ -217,6 +202,8 @@ const Game = () => {
     const currentPlayer = game.getCurrentPlayer();
     playerTurnDiv.textContent = `${currentPlayer.name}'s turn`;
     let i = 0;
+    const boardBox = document.createElement("div");
+    boardBox.classList.add("board-box");
     board.forEach(row => {
       row.forEach((cell, index) => {
         const cellButton = document.createElement("button");
@@ -224,7 +211,8 @@ const Game = () => {
         cellButton.dataset.row = i;
         cellButton.dataset.column = index;
         cellButton.textContent = cell;
-        boardDiv.appendChild(cellButton);
+        boardBox.appendChild(cellButton);
+        boardDiv.appendChild(boardBox);
       })
       i++;
     });
@@ -236,16 +224,6 @@ const Game = () => {
     updateScreen();
     }
   boardDiv.addEventListener("click", clickHandlerBoard);
-
-  restartBtn.addEventListener("click", () => {
-    game.restartGame();
-    updateScreen();
-  });
-
-  startBtn.addEventListener("click", () => {
-    playerForm.textContent = "";
-    WelcomePage();
-  });
 }
 
 

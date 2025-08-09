@@ -8,21 +8,60 @@ body {
     
 }
 
-.board {
+h1 {
+  font-size: 55px;
+  margin-bottom: 0;
+}
+
+.cell {
+  width: 130px;
+  height: 130px;
+  font-size: 24px;
+  color: #002050;
+}
+
+.board-box {
   box-sizing: border-box;
   width: 400px;
   height: 400px;
   margin: auto;
   background-color: #002050;
   display: grid;
-  grid-template-columns: repeat(3,132px);
-  grid-template-rows: repeat(3,132px);
+  grid-template-columns: repeat(3,130px);
+  grid-template-rows: repeat(3,130px);
   gap: 5px;
 }
+.player-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-.cell {
-  width: 132px;
-  height: 132px;
-  font-size: 24px;
-  color: #002050;
+.player-form {
+  display: grid;
+  grid-template-columns: 300px;
+  grid-template-rows: repeat(3, 70px);
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 70px;
+  padding: 10px;
+  background-color: #002050;
+  width: 300px;
+  height: 300px;
+  align-items: center;
+  text-align: left;
+
+}
+
+button {
+  border: none;
+}
+
+input {
+  padding: 5px;
+  outline: none;
+}
+
+form button {
+  padding: 10px;
 }
