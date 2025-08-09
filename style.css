@@ -14,11 +14,15 @@ body {
   height: 400px;
   margin: auto;
   background-color: #002050;
-  /* color: #002050; */
-  /* background-color: #0D1117; */
+  display: grid;
+  grid-template-columns: repeat(3,132px);
+  grid-template-rows: repeat(3,132px);
+  gap: 5px;
 }
 
 .cell {
   width: 132px;
   height: 132px;
+  font-size: 24px;
+  color: #002050;
 }
