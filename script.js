@@ -80,6 +80,10 @@ const Game = () => {
   const player1 = Player("Player1", "O");
   const player2 = Player("Player2", "X");
   let currentPlayer = player1;
+
+  //new 
+  let win = false;
+  let tie = false;
   
   const switchPlayer = () => {
     currentPlayer = (currentPlayer.mark === "O") ? player2 : player1;
@@ -99,23 +103,36 @@ const Game = () => {
 
     if (gameboard.checkWin(currentPlayer.mark)) {
       console.log(`${currentPlayer.name} wins!`);
+      win = true;
       return;
     }
 
     if (gameboard.checkTie()) {
       console.log("It's a tie");
+      tie = true;
       return;
     }
 
     switchPlayer();
   };
 
+  const getWin = () => win;
+  const getTie = () => tie;
+
+  const setWin = (bool) => {
+    win = bool;
+  }
+  const setTie = (bool) => {
+    tie = bool;
+  }
+  console.log(`I am win in playturn ${win}`);
+
   const restartGame = () => {
     gameboard.clearBoard();
     console.log(gameboard.getBoard());
   }
 
-  return { player1, player2, getCurrentPlayer, playTurn, restartGame, getBoard: gameboard.getBoard};
+  return { setWin, setTie, getWin, getTie, player1, player2, getCurrentPlayer, playTurn, restartGame, getBoard: gameboard.getBoard};
 };
 
  const WelcomePage = () => {
@@ -178,6 +195,8 @@ const Game = () => {
 
   restartBtn.addEventListener("click", () => {
     game.restartGame();
+    game.setWin(false);
+    game.setTie(false);
     updateScreen();
   });
 
@@ -188,6 +207,9 @@ const Game = () => {
     player1Para.textContent = "";
     player2Para.textContent = "";
     playerTurnDiv.textContent = "";
+    game.restartGame();
+    game.setWin(false);
+    game.setTie(false);
     WelcomePage();
   });
     updateScreen();
@@ -216,12 +238,30 @@ const Game = () => {
       })
       i++;
     });
+
   }
+
+  // new
+  const gameWin = () => {
+    // console.log(`I am win in display Screen ${game.getWin()}`);
+    let winCheck = game.getWin();
+    let tieCheck = game.getTie();
+    if(winCheck || tieCheck){
+      alert("you won or its a tie");
+      // const checker = document.querySelector(".checker");
+      // const check = document.createElement("div");
+      // check.appendChild(restartBtn);
+      // checker.appendChild(check);
+      // console.log("checked?");
+    }
+  }
+
   function clickHandlerBoard(e) {
     const selectedCol = e.target.dataset.column;
     const selectedRow = e.target.dataset.row;
     game.playTurn(selectedRow,selectedCol);
     updateScreen();
+    gameWin();
     }
   boardDiv.addEventListener("click", clickHandlerBoard);
 }
