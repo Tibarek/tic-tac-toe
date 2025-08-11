@@ -1,30 +1,13 @@
 const Gameboard = () => {
-  const board = [
+  let board = [
     ["", "", ""],
     ["", "", ""],
     ["", "", ""]
   ];
 
-  const printBoard = () => {
-    board.forEach(row => {
-      console.log(row.join("|"));
-    });
-    console.log("\n");
-  };
-
   const placeMark = (row, col, mark) => {
     if(board[row][col] === ""){
       board[row][col] = mark;
-    }
-  };
-
-  const clearBoard = () => {
-    for(let i = 0; i < 3; i++){
-      for(let j = 0; j < 3; j++){
-        if(board[i][j] !== ""){
-          board[i][j] = "";
-        }
-      }
     }
   };
 
@@ -65,7 +48,7 @@ const Gameboard = () => {
     return false;
   };
 
-  return {getBoard, printBoard, placeMark, checkWin, checkTie, clearBoard};
+  return {getBoard,placeMark, checkWin, checkTie};
 };
 
 const Player = (name, mark) => {
@@ -81,7 +64,6 @@ const Game = () => {
   const player2 = Player("Player2", "X");
   let currentPlayer = player1;
 
-  //new 
   let win = false;
   let tie = false;
   
@@ -94,21 +76,17 @@ const Game = () => {
 
   const playTurn = (row, col) => {
     if(board[row][col] !== ""){
-      console.log("Spot already taken! Try again");
       return;
     }
 
     gameboard.placeMark(row, col, currentPlayer.mark);
-    gameboard.printBoard();
 
     if (gameboard.checkWin(currentPlayer.mark)) {
-      console.log(`${currentPlayer.name} wins!`);
       win = true;
       return;
     }
 
     if (gameboard.checkTie()) {
-      console.log("It's a tie");
       tie = true;
       return;
     }
@@ -125,11 +103,13 @@ const Game = () => {
   const setTie = (bool) => {
     tie = bool;
   }
-  console.log(`I am win in playturn ${win}`);
 
   const restartGame = () => {
-    gameboard.clearBoard();
-    console.log(gameboard.getBoard());
+    for(let i = 0; i < 3; i++){
+      for(let j = 0; j < 3; j++){
+        board[i][j] = "";
+      }
+    }
   }
 
   return { setWin, setTie, getWin, getTie, player1, player2, getCurrentPlayer, playTurn, restartGame, getBoard: gameboard.getBoard};
@@ -167,6 +147,26 @@ const Game = () => {
   playerForm.appendChild(playBtn);
   playerDiv.appendChild(playerForm);
 
+  function newGame() {
+    gameBtnDiv.textContent = "";
+    playerDiv.textContent = "";
+    boardDiv.textContent = "";
+    player1Para.textContent = "";
+    player2Para.textContent = "";
+    playerTurnDiv.textContent = "";
+    game.restartGame();
+    game.setWin(false);
+    game.setTie(false);
+    WelcomePage();
+  }
+
+  function playAgain () {
+    game.restartGame();
+    game.setWin(false);
+    game.setTie(false);
+    updateScreen();
+  }
+
 
   function updatePlayer(e) {
     e.preventDefault();
@@ -180,9 +180,7 @@ const Game = () => {
     if(p2.value === ""){
       game.player2.name = "Player2";
     }else if(p2.value !== ""){
-      console.log(p2.value);
       game.player2.name = p2.value;
-      console.log(game.player2.name);
     }
     player2Para.textContent = `${game.player2.name}-X`;
     playerDiv.textContent = "";
@@ -193,25 +191,9 @@ const Game = () => {
     gameBtnDiv.appendChild(startBtn);
     gameBtnDiv.appendChild(restartBtn);
 
-  restartBtn.addEventListener("click", () => {
-    game.restartGame();
-    game.setWin(false);
-    game.setTie(false);
-    updateScreen();
-  });
+    restartBtn.addEventListener("click", playAgain);
 
-  startBtn.addEventListener("click", () => {
-    gameBtnDiv.textContent = "";
-    playerDiv.textContent = "";
-    boardDiv.textContent = "";
-    player1Para.textContent = "";
-    player2Para.textContent = "";
-    playerTurnDiv.textContent = "";
-    game.restartGame();
-    game.setWin(false);
-    game.setTie(false);
-    WelcomePage();
-  });
+    startBtn.addEventListener("click", newGame);
     updateScreen();
 
   }
@@ -241,19 +223,26 @@ const Game = () => {
 
   }
 
-  // new
   const gameWin = () => {
-    // console.log(`I am win in display Screen ${game.getWin()}`);
+    const dialog = document.querySelector("dialog");
+    const dialogNewGame = document.querySelector(".dialog-new-game");
+    const dialogRestart = document.querySelector(".dialog-restart");
     let winCheck = game.getWin();
     let tieCheck = game.getTie();
     if(winCheck || tieCheck){
-      alert("you won or its a tie");
-      // const checker = document.querySelector(".checker");
-      // const check = document.createElement("div");
-      // check.appendChild(restartBtn);
-      // checker.appendChild(check);
-      // console.log("checked?");
+      dialog.showModal();
     }
+    dialogNewGame.addEventListener("click", () => {
+      newGame();
+      dialog.close();
+    })
+    dialogRestart.addEventListener("click", () => {
+      playAgain();
+      dialog.close();
+    })
+    const winnerP = document.querySelector(".winner-p");
+    const currentPlayer = game.getCurrentPlayer();
+    winnerP.textContent = winCheck ? `${currentPlayer.name} wins!` : "It's a tie!";
   }
 
   function clickHandlerBoard(e) {
