@@ -19,14 +19,16 @@ const Gameboard = () => {
         (board[i][0] === mark && board[i][1] === mark && board[i][2] === mark) ||
         (board[0][i] === mark && board[1][i] === mark && board[2][i] === mark)
       ) {
+        console.log("row/column");
         return true;
       }
     }
 
     if (
       (board[0][0] === mark && board[1][1] === mark && board[2][2] === mark) ||
-      (board[0][2] == mark && board[1][1] && board[2][0] === mark)
+      (board[0][2] === mark && board[1][1] === mark && board[2][0] === mark)
     ){
+      console.log("diagonal");
       return true;
     }
     
@@ -231,6 +233,7 @@ const Game = () => {
     let tieCheck = game.getTie();
     if(winCheck || tieCheck){
       dialog.showModal();
+      console.log(game.getBoard());
     }
     dialogNewGame.addEventListener("click", () => {
       newGame();
